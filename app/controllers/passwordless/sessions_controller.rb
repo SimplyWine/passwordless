@@ -9,6 +9,7 @@ module Passwordless
     class SessionTimedOutError < StandardError; end
 
     include ControllerHelpers
+    layout 'passwordless'
 
     # get '/sign_in'
     #   Assigns an email_field and new Session to be used by new view.
@@ -49,12 +50,14 @@ module Passwordless
 
       redirect_enabled = Passwordless.redirect_back_after_sign_in
       destination = reset_passwordless_redirect_location!(User)
-
+      redirect_to '/vendors'
+=begin
       if redirect_enabled && destination
         redirect_to destination
       else
         redirect_to main_app.root_path
       end
+=end      
     rescue SessionTimedOutError
       flash[:error] = I18n.t(".passwordless.sessions.create.session_expired")
       redirect_to main_app.root_path
@@ -65,7 +68,7 @@ module Passwordless
     # @see ControllerHelpers#sign_out
     def destroy
       sign_out authenticatable_class
-      redirect_to main_app.root_path
+      redirect_to '/vendors'
     end
 
     private
