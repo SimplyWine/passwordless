@@ -50,17 +50,16 @@ module Passwordless
 
       redirect_enabled = Passwordless.redirect_back_after_sign_in
       destination = reset_passwordless_redirect_location!(User)
+      session.update(token: nil)
       redirect_to '/vendors'
-=begin
-      if redirect_enabled && destination
-        redirect_to destination
-      else
-        redirect_to main_app.root_path
-      end
-=end      
+
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = I18n.t(".passwordless.sessions.create.session_expired")
+      redirect_to '/vendors/sign_in'
+
     rescue SessionTimedOutError
       flash[:error] = I18n.t(".passwordless.sessions.create.session_expired")
-      redirect_to main_app.root_path
+      redirect_to '/vendors/sign_in'
     end
 
     # match '/sign_out', via: %i[get delete].
