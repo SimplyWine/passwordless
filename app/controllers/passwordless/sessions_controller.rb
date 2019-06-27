@@ -49,9 +49,9 @@ module Passwordless
       sign_in session.authenticatable
 
       redirect_enabled = Passwordless.redirect_back_after_sign_in
-      destination = reset_passwordless_redirect_location!(User)
+      destination = reset_passwordless_redirect_location!(OrgVendor)
       session.update(token: nil)
-      redirect_to '/vendors'
+      redirect_to destination || '/vendors'
 
     rescue ActiveRecord::RecordNotFound
       flash[:error] = I18n.t(".passwordless.sessions.create.session_expired")
