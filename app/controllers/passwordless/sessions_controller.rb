@@ -67,7 +67,13 @@ module Passwordless
     # @see ControllerHelpers#sign_out
     def destroy
       sign_out authenticatable_class
-      redirect_to '/vendors'
+      if params[:mode]
+        redirect_to '/'+params[:mode]
+      elsif params[:app]
+        redirect_to '/connect/success?app='+params[:app]
+      else
+        redirect_to '/vendors'
+      end
     end
 
     private
